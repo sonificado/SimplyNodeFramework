@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(SNFSnmp CONFIG REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/SNFSnmpServerTargets.cmake")
+
+if(TARGET SNFSnmpServer AND NOT TARGET SNFSnmpServer::SNFSnmpServer)
+    add_library(SNFSnmpServer::SNFSnmpServer ALIAS SNFSnmpServer)
+endif()
+
+check_required_components(SNFSnmpServer)

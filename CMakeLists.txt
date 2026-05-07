@@ -27,6 +27,9 @@ option(SNF_ENABLE_SQLITE
 option(SNF_ENABLE_SNMP
     "Build the SNFSnmp module (requires net-snmp / libsnmp-dev)"
     ON)
+option(SNF_ENABLE_SNMP_SERVER
+    "Build the SNFSnmpServer AgentX subagent module (requires libnetsnmpagent)"
+    ON)
 
 # Safety checks: mismatching toolchain / option causes a clear configure error.
 if(EMSCRIPTEN AND NOT SNF_WEB_ASSEMBLY)
@@ -79,6 +82,9 @@ if(NOT SNF_WEB_ASSEMBLY)
     add_subdirectory(lib/HttpServer)
     if(SNF_ENABLE_SNMP)
         add_subdirectory(lib/Snmp)
+        if(SNF_ENABLE_SNMP_SERVER)
+            add_subdirectory(lib/SnmpServer)
+        endif()
     endif()
 endif()
 

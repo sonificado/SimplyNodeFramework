@@ -1,0 +1,78 @@
+# MY-DEVICE-MIB — SNF flat format
+# Enterprise root OID: .1.3.6.1.4.1.99998  (development/testing)
+#
+# Structure:
+#   .1.3.6.1.4.1.99998.1     myDeviceCellular
+#   .1.3.6.1.4.1.99998.1.1   myDeviceQuectel (5G)
+#   .1.3.6.1.4.1.99998.1.2   myDeviceNordic  (LTE-M / NB-IoT)
+#   .1.3.6.1.4.1.99998.2     myDeviceSim
+#   .1.3.6.1.4.1.99998.2.1.1 simTable entries (COLUMN.ROW)
+#   .1.3.6.1.4.1.99998.3     myDeviceGnss
+#   .1.3.6.1.4.1.99998.4     myDeviceClock
+#
+# Line format:
+#   OID  TYPE  ACCESS  NAME  "Description"
+#
+# Supported types  : INTEGER  STRING  COUNTER32  GAUGE32  TIMETICKS  COUNTER64  IPADDRESS  OID
+# Supported access : RO  RW
+#
+# To add a new object:
+#   1. Choose a free OID in the appropriate branch.
+#   2. Add the line in this file.
+#   3. In main.cpp register its getter (and setter if RW).
+#   4. Recompile.  No further steps needed.
+
+# ─── Quectel 5G — .1.3.6.1.4.1.99998.1.1.x.0 ────────────────────────────────
+
+1.3.6.1.4.1.99998.1.1.1.0  INTEGER   RO  quectelStatus              "5G modem status: 1=connected 2=disconnected"
+1.3.6.1.4.1.99998.1.1.2.0  INTEGER   RO  quectelRegistrationState   "Network registration: 0=noReg 1=home 2=searching 3=denied 4=unknown 5=roaming"
+1.3.6.1.4.1.99998.1.1.3.0  STRING    RO  quectelPlmn                "Operator PLMN (MCC+MNC, e.g. 21407)"
+1.3.6.1.4.1.99998.1.1.4.0  INTEGER   RO  quectelCellId              "Cell Identifier 5G (decimal)"
+1.3.6.1.4.1.99998.1.1.5.0  INTEGER   RO  quectelTac                 "Tracking Area Code 5G (decimal)"
+1.3.6.1.4.1.99998.1.1.6.0  INTEGER   RO  quectelRat                 "Radio Access Technology: 1=LTE 2=NR-SA 3=NR-NSA"
+1.3.6.1.4.1.99998.1.1.7.0  INTEGER   RO  quectelRsrp                "RSRP in dBm (negative value, e.g. -85)"
+1.3.6.1.4.1.99998.1.1.8.0  INTEGER   RO  quectelRsrq                "RSRQ in dB (negative value, e.g. -10)"
+1.3.6.1.4.1.99998.1.1.9.0  INTEGER   RO  quectelSinr                "SINR in dB"
+
+# ─── Nordic nRF91 LTE-M/NB-IoT — .1.3.6.1.4.1.99998.1.2.x.0 ─────────────────
+
+1.3.6.1.4.1.99998.1.2.1.0  INTEGER   RO  nordicRegistrationState    "LTE-M/NB-IoT registration: 0=noReg 1=home 2=searching 3=denied 4=unknown 5=roaming"
+1.3.6.1.4.1.99998.1.2.2.0  STRING    RO  nordicPlmn                 "Operator PLMN for LTE-M/NB-IoT"
+1.3.6.1.4.1.99998.1.2.3.0  INTEGER   RO  nordicCellId               "Cell Identifier Nordic (decimal)"
+1.3.6.1.4.1.99998.1.2.4.0  INTEGER   RW  nordicBand                 "Active radio band (RW)"
+1.3.6.1.4.1.99998.1.2.5.0  INTEGER   RO  nordicRsrp                 "RSRP for LTE-M/NB-IoT in dBm"
+1.3.6.1.4.1.99998.1.2.6.0  INTEGER   RO  nordicSnr                  "Signal-to-Noise Ratio in dB"
+
+# ─── SIM slots — .1.3.6.1.4.1.99998.2.1.1.COLUMNA.FILA ──────────────────────
+# SNMP convention: simEntry.COLUMN.ROW  (same as a standard SNMP table)
+# COLUMN:  1=slotIndex  2=type  3=iccid  4=present  5=boundModem  6=status
+# ROW:     1 = physical slot assigned to Quectel
+#          2 = physical slot assigned to Nordic
+
+# — Row 1 (SIM Quectel) —
+1.3.6.1.4.1.99998.2.1.1.1.1  INTEGER   RO  simSlotIndex1    "SIM slot index 1 (always 1)"
+1.3.6.1.4.1.99998.2.1.1.2.1  INTEGER   RO  simType1         "SIM 1 type: 1=physical 2=esimInternal 3=esimExternal"
+1.3.6.1.4.1.99998.2.1.1.3.1  STRING    RO  simIccid1        "ICCID of the SIM in slot 1"
+1.3.6.1.4.1.99998.2.1.1.4.1  INTEGER   RO  simPresent1      "SIM 1 present: 0=absent 1=present"
+1.3.6.1.4.1.99998.2.1.1.5.1  INTEGER   RO  simBoundModem1   "Modem bound to SIM 1: 0=none 1=quectel 2=nordic"
+1.3.6.1.4.1.99998.2.1.1.6.1  INTEGER   RO  simStatus1       "SIM 1 status: 1=ok 2=pinRequired 3=error"
+
+# — Row 2 (SIM Nordic) —
+1.3.6.1.4.1.99998.2.1.1.1.2  INTEGER   RO  simSlotIndex2    "SIM slot index 2 (always 2)"
+1.3.6.1.4.1.99998.2.1.1.2.2  INTEGER   RO  simType2         "SIM 2 type: 1=physical 2=esimInternal 3=esimExternal"
+1.3.6.1.4.1.99998.2.1.1.3.2  STRING    RO  simIccid2        "ICCID of the SIM in slot 2"
+1.3.6.1.4.1.99998.2.1.1.4.2  INTEGER   RO  simPresent2      "SIM 2 present: 0=absent 1=present"
+1.3.6.1.4.1.99998.2.1.1.5.2  INTEGER   RO  simBoundModem2   "Modem bound to SIM 2: 0=none 1=quectel 2=nordic"
+1.3.6.1.4.1.99998.2.1.1.6.2  INTEGER   RO  simStatus2       "SIM 2 status: 1=ok 2=pinRequired 3=error"
+
+# ─── GNSS — .1.3.6.1.4.1.99998.3.x.0 ─────────────────────────────────────────
+
+1.3.6.1.4.1.99998.3.1.0  INTEGER   RW  gnssSource          "Active GNSS source: 1=quectel 2=nordic 3=external (RW)"
+1.3.6.1.4.1.99998.3.2.0  INTEGER   RO  gnssFixStatus       "Fix status: 0=noFix 1=fix2D 2=fix3D 3=timeOnly"
+1.3.6.1.4.1.99998.3.3.0  INTEGER   RO  gnssTimeValid       "GNSS time valid: 0=invalid 1=valid"
+1.3.6.1.4.1.99998.3.4.0  INTEGER   RO  gnssSatellitesUsed  "Number of satellites used in the fix"
+
+# ─── Clock — .1.3.6.1.4.1.99998.4.x.0 ────────────────────────────────────────
+
+1.3.6.1.4.1.99998.4.1.0  INTEGER   RW  clockSource  "Time source: 1=gnss 2=ntp 3=ptp (RW)"
+1.3.6.1.4.1.99998.4.2.0  STRING    RW  clockTime    "System time in ISO 8601 format, e.g. 2025-04-21T10:30:00Z (RW)"
